@@ -2,7 +2,7 @@
 
 import { FaFacebook, FaYoutube, FaLinkedin, FaInstagram, FaTwitter } from 'react-icons/fa'
 
-export default function Footer({ showOnPaths = [] }: { showOnPaths: string[] }) {
+export default function Footer({ showOnPaths = ['/about', '/contact', '/'] }: { showOnPaths: string[] }) {
   // Get the current path on the client side
   if (typeof window !== 'undefined') {
     const shouldShow = showOnPaths.includes(window.location.pathname)
