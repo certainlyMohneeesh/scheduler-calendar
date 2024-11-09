@@ -6,7 +6,8 @@ import {
   formatDate,
   DateSelectArg,
   EventClickArg,
-  EventDropArg
+  EventDropArg,
+  CalendarOptions
 } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -18,6 +19,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+
+interface CalendarProps extends Partial<CalendarOptions> {
+  events: Array<{
+    id: string;
+    title: string;
+    start: Date;
+    end: Date;
+    allDay?: boolean;
+  }>;
+  onSelectEvent: (event: any) => void;
+  onSelectSlot: (slotInfo: any) => void;
+}
 
 interface CalendarEvent {
   id: string;
@@ -31,8 +44,7 @@ const DynamicFullCalendar = dynamic(() => import('@fullcalendar/react'), {
   ssr: false
 });
 
-const Calendar: React.FC = () => {
-  const calendarRef = useRef<any>(null);
+const Calendar: React.FC<CalendarProps> = () => {
   const { toast } = useToast()
   const [mounted, setMounted] = useState(false);
   const [currentEvents, setCurrentEvents] = useState<CalendarEvent[]>([]);
@@ -182,7 +194,7 @@ const Calendar: React.FC = () => {
             contentHeight="auto"
             aspectRatio={1.35}
             handleWindowResize={true}
-            events={currentEvents.map(event => ({
+            events={currentEvents.map((event: CalendarEvent) => ({
               id: event.id,
               title: event.title,
               start: event.start,

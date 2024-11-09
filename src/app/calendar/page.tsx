@@ -5,11 +5,19 @@ import Calendar from '@/components/Calendar'
 import { useSession } from 'next-auth/react'
 import AddEventModal from '@/components/AddEventModal'
 
+interface CalendarEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  allDay?: boolean;
+}
+
 export default function CalendarPage() {
   const { data: session } = useSession()
-  const [events, setEvents] = useState([])
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedEvent, setSelectedEvent] = useState(null)
 
   useEffect(() => {
     // Fetch events from API
@@ -24,7 +32,7 @@ export default function CalendarPage() {
   }
 
   const handleSelectSlot = (slotInfo: any) => {
-    setSelectedEvent(null)
+    setSelectedEvent(undefined)
     setIsModalOpen(true)
   }
 

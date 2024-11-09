@@ -2,20 +2,12 @@
 
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
-
-interface Event {
-  id?: string;
-  title: string;
-  description: string;
-  start: Date;
-  end: Date;
-}
-
+import { CalendarEvent } from '@/types/calendar';
 
 interface AddEventModalProps {
   isOpen: boolean
   onClose: () => void
-  event?: Event;
+  event?: CalendarEvent;
   onSave: () => void
 }
 
