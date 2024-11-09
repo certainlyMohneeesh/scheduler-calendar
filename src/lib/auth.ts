@@ -76,28 +76,31 @@ export const authOptions: NextAuthOptions = {
               }
             })
           ],
-          pages: {
-            signIn: '/login',
-            error: '/login',
-          },
-          session: {
-            strategy: "jwt",
-          },
-          callbacks: {
-            session: ({ session, token }) => ({
-              ...session,
-              user: {
-                ...session.user,
-                id: token.sub,
-              },
-            }),
-            jwt: ({ token, user }) => {
-              if (user) {
-                token.sub = user.id
-              }
-              return token
-            },
-          },
+        pages: {
+            signIn: '/login',
+            error: '/login',
+          },
+          callbacks: {
+            async redirect({ url, baseUrl }) {
+              return `${baseUrl}/calendar`
+            },
+            session: ({ session, token }) => ({
+              ...session,
+              user: {
+                ...session.user,
+                id: token.sub,
+              },
+            }),
+            jwt: ({ token, user }) => {
+              if (user) {
+                token.sub = user.id
+              }
+              return token
+            },
+          },
+          session: {
+            strategy: "jwt",
+          },
         }
     
     

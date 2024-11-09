@@ -1,7 +1,5 @@
 'use client'
 
-// Add this line to hide the footer
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -14,7 +12,6 @@ interface RegisterFormData {
   confirmPassword: string;
 }
 
-
 export default function RegisterPage() {
   const router = useRouter()
   const [formData, setFormData] = useState<RegisterFormData>({
@@ -23,44 +20,49 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: ''
   });
-  
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+
     try {
-        const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        // Automatically sign in after successful registration
+        const signInResult = await signIn('credentials', {
+          email: formData.email,
+          password: formData.password,
+          callbackUrl: '/calendar',
+          redirect: true,
         })
 
-        const data = await response.json()
-
-        if (response.ok) {
-            const result = await signIn('credentials', {
-                email: formData.email,
-                password: formData.password,
-                redirect: false,
-            })
-
-            if (result?.ok) {
-                router.push('/calendar')
-            } else {
-                setError('Failed to sign in after registration')
-            }
-        } else {
-            setError(data.error || 'Registration failed')
+        if (signInResult?.error) {
+          setError('Failed to sign in after registration')
         }
+      } else {
+        setError(data.error || 'Registration failed')
+      }
     } catch (error) {
-        setError('An unexpected error occurred')
-        console.log('Registration error:', error)
+      setError('An unexpected error occurred')
+      console.error('Registration error:', error)
     }
-}
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
