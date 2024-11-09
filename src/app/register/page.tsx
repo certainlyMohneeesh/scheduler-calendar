@@ -1,8 +1,12 @@
 'use client'
 
+// Add this line to hide the footer
+export const hideFooter = true
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -10,32 +14,44 @@ export default function RegisterPage() {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
   })
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
     
-    if (formData.password !== formData.confirmPassword) {
-      return
-    }
+    try {
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
 
-    const response = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      }),
-    })
+        const data = await response.json()
 
-    if (response.ok) {
-      router.push('/login')
+        if (response.ok) {
+            const result = await signIn('credentials', {
+                email: formData.email,
+                password: formData.password,
+                redirect: false,
+            })
+
+            if (result?.ok) {
+                router.push('/calendar')
+            } else {
+                setError('Failed to sign in after registration')
+            }
+        } else {
+            setError(data.error || 'Registration failed')
+        }
+    } catch (error) {
+        setError('An unexpected error occurred')
+        console.log('Registration error:', error)
     }
-  }
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -45,8 +61,13 @@ export default function RegisterPage() {
             Create your account
           </h2>
         </div>
+        {error && (
+          <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
+            {error}
+          </div>
+        )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
+        <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="name" className="sr-only">Full Name</label>
               <input

@@ -1,8 +1,8 @@
 import { Calendar as BigCalendar, dateFnsLocalizer } from 'react-big-calendar'
-import format from 'date-fns/format'
-import parse from 'date-fns/parse'
-import startOfWeek from 'date-fns/startOfWeek'
-import getDay from 'date-fns/getDay'
+import { format } from 'date-fns/format'
+import { parse } from 'date-fns/parse'
+import { startOfWeek } from 'date-fns/startOfWeek'
+import { getDay } from 'date-fns/getDay'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 const locales = {
@@ -29,7 +29,7 @@ interface CalendarProps {
 
 export default function Calendar({ events, onSelectEvent, onSelectSlot }: CalendarProps) {
   return (
-    <div className="h-[600px] mt-4">
+    <div className="h-[600px] mt-4 bg-white p-5 rounded-lg shadow-sm">
       <BigCalendar
         localizer={localizer}
         events={events}
@@ -39,6 +39,7 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
         onSelectEvent={onSelectEvent}
         onSelectSlot={onSelectSlot}
         views={['month', 'week', 'day']}
+        className="text-gray-800" // This will make text darker and more visible
       />
     </div>
   )

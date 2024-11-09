@@ -48,15 +48,15 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           <div className="p-6 bg-white rounded-xl shadow-sm">
-            <h3 className="text-lg font-semibold mb-2">Easy Scheduling</h3>
+            <h3 className="text-lg font-semibold mb-2 text-black">Easy Scheduling</h3>
             <p className="text-gray-600">Create and manage your schedules with just a few clicks</p>
           </div>
           <div className="p-6 bg-white rounded-xl shadow-sm">
-            <h3 className="text-lg font-semibold mb-2">Smart Calendar</h3>
+            <h3 className="text-lg font-semibold mb-2 text-black">Smart Calendar</h3>
             <p className="text-gray-600">View your schedule in daily, weekly, or monthly formats</p>
           </div>
           <div className="p-6 bg-white rounded-xl shadow-sm">
-            <h3 className="text-lg font-semibold mb-2">Responsive Design</h3>
+            <h3 className="text-lg font-semibold mb-2 text-black">Responsive Design</h3>
             <p className="text-gray-600">Access your schedule from any device, anywhere</p>
           </div>
         </div>

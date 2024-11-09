@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Ubuntu } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/Providers'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
-const inter = Inter({ subsets: ['latin'] })
+const ubuntu = Ubuntu({ weight: "400", subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Yolda Scheduler',
@@ -14,19 +14,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode
+  params: { pathname: string }
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={ubuntu.className}>
         <Providers>
           <div className="flex flex-col min-h-screen">
             <Navbar />
             <main className="flex-grow">
               {children}
             </main>
-            <Footer />
+            <Footer showOnPaths={['/about', '/contact', '/']} />
           </div>
         </Providers>
       </body>

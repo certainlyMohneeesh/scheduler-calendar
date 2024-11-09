@@ -2,7 +2,12 @@
 
 import { FaFacebook, FaYoutube, FaLinkedin, FaInstagram, FaTwitter } from 'react-icons/fa'
 
-export default function Footer() {
+export default function Footer({ showOnPaths = [] }: { showOnPaths: string[] }) {
+  // Get the current path on the client side
+  if (typeof window !== 'undefined') {
+    const shouldShow = showOnPaths.includes(window.location.pathname)
+    if (!shouldShow) return null
+  }
   return (
     <footer className="relative bg-[#0A122A] py-12 px-8 text-white overflow-hidden">
       {/* Background Text */}
