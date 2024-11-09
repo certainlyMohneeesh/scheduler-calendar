@@ -92,6 +92,24 @@ const Calendar: React.FC = () => {
     }
   };
 
+  const handleEventDrop = (info: any) => {
+    const updatedEvents = currentEvents.map(event => ({
+      id: event.id,
+      title: event.title,
+      start: info.event.id === event.id ? info.event.start : event.start,
+      end: info.event.id === event.id ? info.event.end : event.end,
+      allDay: event.allDay
+    }));
+    
+    setCurrentEvents(updatedEvents);
+    localStorage.setItem('calendarEvents', JSON.stringify(updatedEvents));
+    
+    toast({
+      title: "Event Updated",
+      description: `${info.event.title} has been rescheduled.`,
+    });
+  };
+
   return (
     <div>
       <div className="flex flex-col lg:flex-row w-full px-4 lg:px-10 justify-start items-start gap-8">
@@ -148,6 +166,8 @@ const Calendar: React.FC = () => {
             }}
             initialView={window.innerWidth < 768 ? "timeGridDay" : "dayGridMonth"}
             editable={true}
+            droppable={true}
+            eventDrop={handleEventDrop}
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
@@ -157,6 +177,13 @@ const Calendar: React.FC = () => {
             contentHeight="auto"
             aspectRatio={1.35}
             handleWindowResize={true}
+            events={currentEvents.map(event => ({
+              id: event.id,
+              title: event.title,
+              start: event.start,
+              end: event.end,
+              allDay: event.allDay
+            }))}
           />
         </div>
       </div>
