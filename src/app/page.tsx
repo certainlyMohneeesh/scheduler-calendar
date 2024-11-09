@@ -45,6 +45,21 @@ export default function Home() {
             </>
           )}
         </div>
+          
+        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Quick Access
+        </h2>
+        <p className="text-gray-600 mb-4">
+          Need direct access to your calendar? Use this quick link:
+        </p>
+        <Link 
+          href="/calendar" 
+          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+        >
+          Go to Calendar
+        </Link>
+      </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           <div className="p-6 bg-white rounded-xl shadow-sm">

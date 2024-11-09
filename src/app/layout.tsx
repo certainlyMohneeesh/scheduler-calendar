@@ -11,6 +11,7 @@ const ubuntu = Ubuntu({ weight: "400", subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Yolda Scheduler',
   description: 'Manage your schedule efficiently',
+  icons: '/favicon.ico',
 }
 
 export default function RootLayout({

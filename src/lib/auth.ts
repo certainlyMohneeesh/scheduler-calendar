@@ -84,24 +84,23 @@ export const authOptions: NextAuthOptions = {
                     strategy: "jwt",
                 },
                 callbacks: {
-                    async redirect({ url, baseUrl }) {
-                    // Always redirect to calendar after successful auth
-                    return `${baseUrl}/calendar`
+                    async redirect() {
+                      return '/calendar'  // Direct path instead of using baseUrl
                     },
                     session: ({ session, token }) => ({
-                    ...session,
-                    user: {
+                      ...session,
+                      user: {
                         ...session.user,
                         id: token.sub,
-                    },
+                      },
                     }),
                     jwt: ({ token, user }) => {
-                    if (user) {
+                      if (user) {
                         token.sub = user.id
-                    }
-                    return token
+                      }
+                      return token
                     },
-                },
+                  },
                 }
     
     
