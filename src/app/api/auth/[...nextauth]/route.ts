@@ -4,8 +4,33 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import { compare } from "bcrypt"
+import { DefaultSession, NextAuthOptions } from "next-auth"
 
-const handler = NextAuth({
+interface UserWithPassword {
+  id: string;
+  name: string | null;
+  email: string | null;
+  emailVerified: Date | null;
+  image: string | null;
+  password: string;
+}
+
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+    } & DefaultSession["user"]
+  }
+}
+
+declare module "next-auth/adapters" {
+  interface AdapterUser {
+    password?: string;
+  }
+}
+
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -27,7 +52,7 @@ const handler = NextAuth({
           where: {
             email: credentials.email
           }
-        })
+        })  as UserWithPassword | null;
 
         if (!user || !user.password) {
           throw new Error("User not found")
@@ -55,19 +80,21 @@ const handler = NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    session: async ({ session, token }) => {
-      if (session?.user) {
-        session.user.id = token.sub!
-      }
-      return session
-    },
-    jwt: async ({ token, user }) => {
+    session: ({ session, token }) => ({
+      ...session,
+      user: {
+        ...session.user,
+        id: token.sub,
+      },
+    }),
+    jwt: ({ token, user }) => {
       if (user) {
         token.sub = user.id
       }
       return token
     },
   },
-})
+}
 
+const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST }

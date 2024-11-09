@@ -76,14 +76,15 @@ const Calendar: React.FC = () => {
       const calendarApi = selectedDate.view.calendar;
       calendarApi.unselect();
 
-      const updatedEvents = [...currentEvents, {
+      const newEvent: CalendarEvent = {
         id: `${selectedDate.start.toISOString()}-${newEventTitle}`,
         title: newEventTitle,
         start: selectedDate.start,
         end: selectedDate.end,
         allDay: selectedDate.allDay,
-      } as CalendarEvent];
-      
+      };
+
+      const updatedEvents = [...currentEvents, newEvent];
       setCurrentEvents(updatedEvents);
       localStorage.setItem('calendarEvents', JSON.stringify(updatedEvents));
 
@@ -96,17 +97,17 @@ const Calendar: React.FC = () => {
       
       handleCloseDialog();
     }
-  };
+};
 
   const handleEventDrop = (info: EventDropArg) => {
-    const updatedEvents = currentEvents.map(event => ({
+    const updatedEvents: CalendarEvent[] = currentEvents.map(event => ({
       id: event.id,
       title: event.title,
-      start: info.event.id === event.id ? info.event.start : event.start,
-      end: info.event.id === event.id ? info.event.end : event.end,
+      start: info.event.id === event.id ? new Date(info.event.start!) : new Date(event.start!),
+      end: info.event.id === event.id ? new Date(info.event.end!) : new Date(event.end!),
       allDay: event.allDay
     }));
-    
+
     setCurrentEvents(updatedEvents);
     localStorage.setItem('calendarEvents', JSON.stringify(updatedEvents));
     
@@ -151,7 +152,6 @@ const Calendar: React.FC = () => {
 
         <div className="w-full lg:w-9/12">
           <DynamicFullCalendar
-            ref={calendarRef}
             height={"auto"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             headerToolbar={{
