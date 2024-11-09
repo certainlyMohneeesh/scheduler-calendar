@@ -1,7 +1,6 @@
 'use client'
 
 // Add this line to hide the footer
-export const hideFooter = true
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
