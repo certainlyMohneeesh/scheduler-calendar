@@ -3,10 +3,19 @@
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 
+interface Event {
+  id?: string;
+  title: string;
+  description: string;
+  start: Date;
+  end: Date;
+}
+
+
 interface AddEventModalProps {
   isOpen: boolean
   onClose: () => void
-  event?: any
+  event?: Event;
   onSave: () => void
 }
 

@@ -6,9 +6,8 @@ import {
   formatDate,
   DateSelectArg,
   EventClickArg,
-  EventApi,
+  EventDropArg
 } from "@fullcalendar/core";
-import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -20,6 +19,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+interface CalendarEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+}
+
 const DynamicFullCalendar = dynamic(() => import('@fullcalendar/react'), {
   ssr: false
 });
@@ -28,7 +35,7 @@ const Calendar: React.FC = () => {
   const calendarRef = useRef<any>(null);
   const { toast } = useToast()
   const [mounted, setMounted] = useState(false);
-  const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
+  const [currentEvents, setCurrentEvents] = useState<CalendarEvent[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newEventTitle, setNewEventTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
@@ -69,15 +76,14 @@ const Calendar: React.FC = () => {
       const calendarApi = selectedDate.view.calendar;
       calendarApi.unselect();
 
-      const newEvent = {
+      const updatedEvents = [...currentEvents, {
         id: `${selectedDate.start.toISOString()}-${newEventTitle}`,
         title: newEventTitle,
         start: selectedDate.start,
         end: selectedDate.end,
         allDay: selectedDate.allDay,
-      };
-
-      const updatedEvents = [...currentEvents, newEvent];
+      } as CalendarEvent];
+      
       setCurrentEvents(updatedEvents);
       localStorage.setItem('calendarEvents', JSON.stringify(updatedEvents));
 
@@ -92,7 +98,7 @@ const Calendar: React.FC = () => {
     }
   };
 
-  const handleEventDrop = (info: any) => {
+  const handleEventDrop = (info: EventDropArg) => {
     const updatedEvents = currentEvents.map(event => ({
       id: event.id,
       title: event.title,
@@ -173,7 +179,6 @@ const Calendar: React.FC = () => {
             dayMaxEvents={true}
             select={handleDateClick}
             eventClick={handleEventClick}
-            events={currentEvents}
             contentHeight="auto"
             aspectRatio={1.35}
             handleWindowResize={true}
