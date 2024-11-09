@@ -4,6 +4,7 @@ import './globals.css'
 import Providers from '@/components/Providers'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { Toaster } from "@/components/ui/toaster"
 
 const ubuntu = Ubuntu({ weight: "400", subsets: ['latin'] })
 
@@ -29,6 +30,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer showOnPaths={['/about', '/contact', '/']} />
+            <Toaster />
           </div>
         </Providers>
       </body>

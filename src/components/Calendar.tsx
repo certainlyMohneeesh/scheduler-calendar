@@ -1,46 +1,228 @@
-import { Calendar as BigCalendar, dateFnsLocalizer } from 'react-big-calendar'
-import { format } from 'date-fns/format'
-import { parse } from 'date-fns/parse'
-import { startOfWeek } from 'date-fns/startOfWeek'
-import { getDay } from 'date-fns/getDay'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
+"use client";
 
-const locales = {
-  'en-US': require('date-fns/locale/en-US'),
-}
+import React, { useState, useEffect } from "react";
+import dynamic from 'next/dynamic'
+import {
+  formatDate,
+  DateSelectArg,
+  EventClickArg,
+  EventApi,
+} from "@fullcalendar/core";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { useToast } from "@/hooks/use-toast"
 
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-})
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-interface CalendarProps {
-  events: Array<{
-    title: string
-    start: Date
-    end: Date
-  }>
-  onSelectEvent: (event: any) => void
-  onSelectSlot: (slotInfo: any) => void
-}
+const saveEventsToStorage = (events: EventApi[]) => {
+  const eventsToSave = events.map(event => ({
+    id: event.id,
+    title: event.title,
+    start: event.startStr,
+    end: event.endStr,
+    allDay: event.allDay
+  }));
+  localStorage.setItem("calendarEvents", JSON.stringify(eventsToSave));
+};
 
-export default function Calendar({ events, onSelectEvent, onSelectSlot }: CalendarProps) {
+const DynamicFullCalendar = dynamic(() => import('@fullcalendar/react'), {
+  ssr: false
+});
+
+const Calendar: React.FC = () => {
+  const { toast } = useToast()
+  const [mounted, setMounted] = useState(false);
+  const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
+  const [initialEvents, setInitialEvents] = useState<any[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [newEventTitle, setNewEventTitle] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
+
+  // Load events from local storage when the component mounts
+  useEffect(() => {
+    const savedEvents = localStorage.getItem("calendarEvents");
+    if (savedEvents) {
+      const parsedEvents = JSON.parse(savedEvents);
+      setInitialEvents(parsedEvents);
+      setCurrentEvents(parsedEvents);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save events to local storage whenever they change
+    if (typeof window !== "undefined") {
+      localStorage.setItem("events", JSON.stringify(currentEvents));
+    }
+  }, [currentEvents]);
+
+  useEffect(() => {
+    setMounted(true);
+    const savedEvents = localStorage.getItem("calendarEvents");
+    if (savedEvents) {
+      setCurrentEvents(JSON.parse(savedEvents));
+    }
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  const handleDateClick = (selected: DateSelectArg) => {
+    setSelectedDate(selected);
+    setIsDialogOpen(true);
+  };
+
+  const handleEventClick = (selected: EventClickArg) => {
+    // Prompt user for confirmation before deleting an event
+    if (
+      window.confirm(
+        `Are you sure you want to delete the event "${selected.event.title}"?`
+      )
+    ) {
+      selected.event.remove();
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setNewEventTitle("");
+  };
+
+  const handleAddEvent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newEventTitle && selectedDate) {
+      const calendarApi = selectedDate.view.calendar;
+      calendarApi.unselect();
+
+      const newEvent = {
+        id: `${selectedDate.start.toISOString()}-${newEventTitle}`,
+        title: newEventTitle,
+        start: selectedDate.start,
+        end: selectedDate.end,
+        allDay: selectedDate.allDay,
+      };
+
+      calendarApi.addEvent(newEvent);
+      
+      toast({
+        title: "Event Added!",
+        description: `${newEventTitle} has been scheduled successfully.`,
+      })
+      
+      handleCloseDialog();
+    }
+  };
+
   return (
-    <div className="h-[600px] mt-4 bg-white p-5 rounded-lg shadow-sm">
-      <BigCalendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        selectable
-        onSelectEvent={onSelectEvent}
-        onSelectSlot={onSelectSlot}
-        views={['month', 'week', 'day']}
-        className="text-gray-800" // This will make text darker and more visible
-      />
+    <div>
+      <div className="flex flex-col lg:flex-row w-full px-4 lg:px-10 justify-start items-start gap-8">
+  {/* Events List Section */}
+  <div className="w-full lg:w-3/12 mb-6 lg:mb-0">
+    <div className="py-6 lg:py-10 text-xl lg:text-2xl font-extrabold px-4 lg:px-7">
+      Calendar Events
     </div>
-  )
-}
+    <ul className="space-y-4">
+      {currentEvents.length <= 0 && (
+        <div className="italic text-center text-gray-400">
+          No Events Present
+        </div>
+      )}
+      {currentEvents.length > 0 &&
+        currentEvents.map((event: EventApi) => (
+          <li
+            className="border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800"
+            key={event.id}
+          >
+            {event.title}
+            <br />
+            <label className="text-slate-950">
+              {formatDate(event.start!, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </label>
+          </li>
+        ))}
+    </ul>
+  </div>
+
+         {/* Calendar Section */}
+  <div className="w-full lg:w-9/12">
+  <DynamicFullCalendar
+  height={"auto"}
+  plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+  headerToolbar={{
+    left: "prev,next today",
+    center: "title",
+    right: "dayGridMonth,timeGridWeek,timeGridDay",
+  }}
+  views={{
+    dayGridMonth: {
+      titleFormat: { month: 'long', year: 'numeric' }
+    },
+    timeGridWeek: {
+      titleFormat: { month: 'long', year: 'numeric' }
+    },
+    timeGridDay: {
+      titleFormat: { month: 'long', day: 'numeric', year: 'numeric' }
+    }
+  }}
+  initialView={window.innerWidth < 768 ? "timeGridDay" : "dayGridMonth"}
+  editable={true}
+  selectable={true}
+  selectMirror={true}
+  dayMaxEvents={true}
+  select={handleDateClick}
+  eventClick={handleEventClick}
+  eventsSet={(events) => setCurrentEvents(events)}
+  initialEvents={
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("events") || "[]")
+      : []
+  }
+  contentHeight="auto"
+  aspectRatio={1.35}
+  handleWindowResize={true}
+/>
+
+  </div>
+</div>
+
+      {/* Dialog for adding new events */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Event Details</DialogTitle>
+          </DialogHeader>
+          <form className="space-x-5 mb-4" onSubmit={handleAddEvent}>
+            <input
+              type="text"
+              placeholder="Event Title"
+              value={newEventTitle}
+              onChange={(e) => setNewEventTitle(e.target.value)} // Update new event title as the user types.
+              required
+              className="border border-gray-200 p-3 rounded-md text-lg"
+            />
+            <button
+              className="bg-green-500 text-white p-3 mt-5 rounded-md"
+              type="submit"
+            >
+              Add
+            </button>{" "}
+            {/* Button to submit new event */}
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Calendar;
