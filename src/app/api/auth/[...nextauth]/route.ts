@@ -1,12 +1,22 @@
 import NextAuth from "next-auth"
-import { authOptions } from "@/lib/auth"
+import GoogleProvider from "next-auth/providers/google"
 
 const handler = NextAuth({
-  ...authOptions,
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    })
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    async signIn() {
+      return true
+    },
     async redirect() {
       return '/calendar'
     }
   }
 })
+
 export { handler as GET, handler as POST }
