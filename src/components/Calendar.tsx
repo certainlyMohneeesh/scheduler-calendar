@@ -166,6 +166,18 @@ const Calendar: React.FC<CalendarProps> = () => {
           <DynamicFullCalendar
             height={"auto"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            editable={true}
+            droppable={true}
+            eventDrop={handleEventDrop}
+            selectable={true}
+            selectMirror={true}
+            dayMaxEvents={true}
+            longPressDelay={100}
+            eventLongPressDelay={100}
+            selectLongPressDelay={100}
+            eventStartEditable={true}
+            eventDurationEditable={true}
+            eventDragMinDistance={5}
             headerToolbar={{
               left: "prev,next today",
               center: "title",
@@ -183,12 +195,6 @@ const Calendar: React.FC<CalendarProps> = () => {
               }
             }}
             initialView={window.innerWidth < 768 ? "timeGridDay" : "dayGridMonth"}
-            editable={true}
-            droppable={true}
-            eventDrop={handleEventDrop}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={true}
             select={handleDateClick}
             eventClick={handleEventClick}
             contentHeight="auto"
