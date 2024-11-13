@@ -212,7 +212,7 @@ const handleEventDrop = (info: EventDropArg) => {
         <div className="w-full lg:w-9/12">
           <DynamicFullCalendar
             height={"auto"}
-            plugins={[dayGridPlugin, timeGridPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             editable={true}
             droppable={true}
             eventDrop={handleEventDrop}
