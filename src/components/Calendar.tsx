@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense  } from "react";
 import ErrorBoundary from './ErrorBoundary';
+import listPlugin from '@fullcalendar/list'
 import dynamic from 'next/dynamic'
 import {
   formatDate,
@@ -44,8 +45,9 @@ interface CalendarEvent {
 }
 
 const DynamicFullCalendar = dynamic(() => import('@fullcalendar/react'), {
-  ssr: false
-});
+  ssr: false,
+  loading: () => <div>Loading calendar...</div>
+})
 
 function CalendarFallback() {
   return (
@@ -94,7 +96,13 @@ const Calendar: React.FC<CalendarProps> = () => {
   
 
 
-  if (!mounted) return <CalendarFallback />;
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-pulse text-xl">Loading calendar...</div>
+      </div>
+    )
+  }
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
@@ -157,7 +165,8 @@ const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
     }
 };
 
-  const handleEventDrop = (info: EventDropArg) => {
+const handleEventDrop = (info: EventDropArg) => {
+  try {
     const updatedEvents: CalendarEvent[] = currentEvents.map(event => ({
       id: event.id,
       title: event.title,
@@ -173,7 +182,16 @@ const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
       title: "Event Updated",
       description: `${info.event.title} has been rescheduled.`,
     });
-  };
+  } catch (error) {
+    console.error('Error updating event:', error);
+    toast({
+      title: "Error",
+      description: "Failed to update event. Please try again.",
+      variant: "destructive"
+    });
+  }
+};
+
 
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
@@ -212,7 +230,7 @@ const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
         <div className="w-full lg:w-9/12">
           <DynamicFullCalendar
             height={"auto"}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
             editable={true}
             droppable={true}
             eventDrop={handleEventDrop}
