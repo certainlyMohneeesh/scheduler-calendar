@@ -240,7 +240,7 @@ const handleEventDrop = (info: EventDropArg) => {
             headerToolbar={{
               left: "prev,next today",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek,listMonth'",
+              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek,listMonth",
             }}
             views={{
               dayGridMonth: { titleFormat: { month: 'long', year: 'numeric' } },
