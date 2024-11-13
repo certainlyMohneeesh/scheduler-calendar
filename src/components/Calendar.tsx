@@ -21,8 +21,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ShareCalendar } from "./ShareCalendar";
-import { ExportCalendar } from "./ExportCalendar";
+// import { ShareCalendar } from "./ShareCalendar";
+// import { ExportCalendar } from "./ExportCalendar";
 
 interface CalendarProps extends Partial<CalendarOptions> {
   events: Array<{
@@ -96,7 +96,7 @@ const Calendar: React.FC<CalendarProps> = () => {
   
 
 
-  if (!mounted) return null;
+ if (!mounted) return null;
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
@@ -263,11 +263,11 @@ const handleEventDrop = (info: EventDropArg) => {
               allDay: event.allDay
             }))}
           />
-          <ExportCalendar events={currentEvents} />
+          {/* <ExportCalendar events={currentEvents} /> */}
         </div>
-        <div>
+        {/* <div>
     {eventInfo && <ShareCalendar event={eventInfo} />}
-  </div>
+  </div> */}
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
