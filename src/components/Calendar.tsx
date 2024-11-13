@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect,  } from "react";
 // import ErrorBoundary from './ErrorBoundary';
-import listPlugin from '@fullcalendar/list'
+// import listPlugin from '@fullcalendar/list'
 import dynamic from 'next/dynamic'
 import {
   formatDate,
@@ -103,23 +103,11 @@ const Calendar: React.FC<CalendarProps> = () => {
     setIsDialogOpen(true);
   };
 
-// For the event details section, use selectedEvent state
-const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
-
   const handleEventClick = (selected: EventClickArg) => {
     const event = selected.event;
-
-    setEventInfo({
-      id: event.id,
-      title: event.title,
-      start: event.start!,
-      end: event.end!,
-      allDay: event.allDay
-    });
-
-    if (window.confirm(`Are you sure you want to delete the event "${event.title}"?`)) {
-      event.remove();
-      const updatedEvents = currentEvents.filter(event => event.id !== event.id);
+    if (window.confirm(`Are you sure you want to delete the event "${selected.event.title}"?`)) {
+      selected.event.remove();
+      const updatedEvents = currentEvents.filter(event => event.id !== selected.event.id);
       setCurrentEvents(updatedEvents);
       localStorage.setItem('calendarEvents', JSON.stringify(updatedEvents));
     }
@@ -224,7 +212,7 @@ const handleEventDrop = (info: EventDropArg) => {
         <div className="w-full lg:w-9/12">
           <DynamicFullCalendar
             height={"auto"}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin]}
             editable={true}
             droppable={true}
             eventDrop={handleEventDrop}
@@ -240,7 +228,7 @@ const handleEventDrop = (info: EventDropArg) => {
             headerToolbar={{
               left: "prev,next today",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek,listMonth",
+              right: 'dayGridMonth,timeGridWeek,timeGridDay',
             }}
             views={{
               dayGridMonth: { titleFormat: { month: 'long', year: 'numeric' } },
