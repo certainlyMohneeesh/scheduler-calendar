@@ -219,12 +219,6 @@ const handleEventDrop = (info: EventDropArg) => {
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
-            longPressDelay={100}
-            eventLongPressDelay={100}
-            selectLongPressDelay={100}
-            eventStartEditable={true}
-            eventDurationEditable={true}
-            eventDragMinDistance={5}
             headerToolbar={{
               left: "prev,next today",
               center: "title",
