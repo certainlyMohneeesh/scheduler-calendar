@@ -7,6 +7,12 @@ import AddEventModal from '@/components/AddEventModal'
 import { EventNotifications } from '@/components/EventNotifications'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
+interface CalendarProps {
+  events: CalendarEvent[];
+  onSelectEvent: (event: CalendarEvent) => void;
+  onSelectSlot: (slotInfo: any) => void;
+}
+
 interface CalendarEvent {
   id: string;
   title: string;

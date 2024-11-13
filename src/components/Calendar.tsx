@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, Suspense  } from "react";
+import ErrorBoundary from './ErrorBoundary';
 import dynamic from 'next/dynamic'
 import {
   formatDate,
@@ -45,6 +46,28 @@ interface CalendarEvent {
 const DynamicFullCalendar = dynamic(() => import('@fullcalendar/react'), {
   ssr: false
 });
+
+function CalendarFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-pulse text-xl">Loading calendar...</div>
+    </div>
+  )
+}
+
+function ErrorFallback() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h2 className="text-xl font-bold mb-4">Calendar is taking a break</h2>
+      <button
+        onClick={() => window.location.reload()}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Refresh Page
+      </button>
+    </div>
+  )
+}
 
 const Calendar: React.FC<CalendarProps> = () => {
   const { toast } = useToast()
@@ -151,6 +174,8 @@ const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
   };
 
   return (
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <Suspense fallback={<CalendarFallback />}>
     <div>
       <div className="flex flex-col lg:flex-row w-full px-4 lg:px-10 justify-start items-start gap-8">
         <div className="w-full lg:w-3/12 mb-6 lg:mb-0">
@@ -256,6 +281,8 @@ const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
         </DialogContent>
       </Dialog>
     </div>
+    </Suspense>
+    </ErrorBoundary>
   );
 };
 

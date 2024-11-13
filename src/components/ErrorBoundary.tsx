@@ -1,16 +1,31 @@
 'use client'
-import { useEffect } from 'react'
+import React from 'react'
 
-export default function ErrorBoundary({
-  children
-}: {
+interface ErrorBoundaryProps {
   children: React.ReactNode
-}) {
-  useEffect(() => {
-    window.onerror = (message, source, lineno, colno, error) => {
-      console.log('Client Error:', { message, source, lineno, colno, error })
-    }
-  }, [])
-
-  return <>{children}</>
+  fallback: React.ReactNode
 }
+
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  { hasError: boolean }
+> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback
+    }
+
+    return this.props.children
+  }
+}
+
+export default ErrorBoundary
