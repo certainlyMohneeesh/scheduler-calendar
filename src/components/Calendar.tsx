@@ -49,7 +49,13 @@ const DynamicFullCalendar = dynamic(() => import('@fullcalendar/react'), {
 const Calendar: React.FC<CalendarProps> = () => {
   const { toast } = useToast()
   const [mounted, setMounted] = useState(false);
-  const [currentEvents, setCurrentEvents] = useState<CalendarEvent[]>([]);
+  const [currentEvents, setCurrentEvents] = useState<CalendarEvent[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('calendarEvents')
+      return saved ? JSON.parse(saved) : []
+    }
+    return []
+  });
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newEventTitle, setNewEventTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
