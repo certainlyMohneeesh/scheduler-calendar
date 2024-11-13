@@ -91,8 +91,10 @@ const Calendar: React.FC<CalendarProps> = () => {
       setCurrentEvents(events);
     }
   }, []);
+  
 
-  if (!mounted) return null;
+
+  if (!mounted) return <CalendarFallback />;
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
@@ -175,7 +177,6 @@ const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
 
   return (
     <ErrorBoundary fallback={<ErrorFallback />}>
-      <Suspense fallback={<CalendarFallback />}>
     <div>
       <div className="flex flex-col lg:flex-row w-full px-4 lg:px-10 justify-start items-start gap-8">
         <div className="w-full lg:w-3/12 mb-6 lg:mb-0">
@@ -281,7 +282,6 @@ const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
         </DialogContent>
       </Dialog>
     </div>
-    </Suspense>
     </ErrorBoundary>
   );
 };
