@@ -5,6 +5,7 @@ import Calendar from '@/components/Calendar'
 import { useSession } from 'next-auth/react'
 import AddEventModal from '@/components/AddEventModal'
 import { EventNotifications } from '@/components/EventNotifications'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 interface CalendarEvent {
   id: string;
@@ -45,6 +46,7 @@ export default function CalendarPage() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">My Schedule</h1>
+      <ErrorBoundary>
       <Calendar
         events={events}
         onSelectEvent={handleSelectEvent}
@@ -60,6 +62,7 @@ export default function CalendarPage() {
         
       )}
       <EventNotifications events={events} />
+      </ErrorBoundary>
     </div>
   )
 }
