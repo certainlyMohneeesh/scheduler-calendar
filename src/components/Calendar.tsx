@@ -96,13 +96,7 @@ const Calendar: React.FC<CalendarProps> = () => {
   
 
 
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-pulse text-xl">Loading calendar...</div>
-      </div>
-    )
-  }
+  if (!mounted) return null;
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
