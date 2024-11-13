@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, Suspense  } from "react";
-import ErrorBoundary from './ErrorBoundary';
+import React, { useState, useEffect,  } from "react";
+// import ErrorBoundary from './ErrorBoundary';
 import listPlugin from '@fullcalendar/list'
 import dynamic from 'next/dynamic'
 import {
@@ -49,27 +49,27 @@ const DynamicFullCalendar = dynamic(() => import('@fullcalendar/react'), {
   loading: () => <div>Loading calendar...</div>
 })
 
-function CalendarFallback() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-pulse text-xl">Loading calendar...</div>
-    </div>
-  )
-}
+// function CalendarFallback() {
+//   return (
+//     <div className="flex items-center justify-center min-h-screen">
+//       <div className="animate-pulse text-xl">Loading calendar...</div>
+//     </div>
+//   )
+// }
 
-function ErrorFallback() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h2 className="text-xl font-bold mb-4">Calendar is taking a break</h2>
-      <button
-        onClick={() => window.location.reload()}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Refresh Page
-      </button>
-    </div>
-  )
-}
+// function ErrorFallback() {
+//   return (
+//     <div className="flex flex-col items-center justify-center min-h-screen">
+//       <h2 className="text-xl font-bold mb-4">Calendar is taking a break</h2>
+//       <button
+//         onClick={() => window.location.reload()}
+//         className="bg-blue-500 text-white px-4 py-2 rounded"
+//       >
+//         Refresh Page
+//       </button>
+//     </div>
+//   )
+// }
 
 const Calendar: React.FC<CalendarProps> = () => {
   const { toast } = useToast()
@@ -188,7 +188,7 @@ const handleEventDrop = (info: EventDropArg) => {
 
 
   return (
-    <ErrorBoundary fallback={<ErrorFallback />}>
+    // <ErrorBoundary fallback={<ErrorFallback />}>
     <div>
       <div className="flex flex-col lg:flex-row w-full px-4 lg:px-10 justify-start items-start gap-8">
         <div className="w-full lg:w-3/12 mb-6 lg:mb-0">
@@ -294,7 +294,7 @@ const handleEventDrop = (info: EventDropArg) => {
         </DialogContent>
       </Dialog>
     </div>
-    </ErrorBoundary>
+    // </ErrorBoundary>
   );
 };
 
