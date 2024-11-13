@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Calendar from '@/components/Calendar'
 import { useSession } from 'next-auth/react'
 import AddEventModal from '@/components/AddEventModal'
+import { EventNotifications } from '@/components/EventNotifications'
 
 interface CalendarEvent {
   id: string;
@@ -56,7 +57,9 @@ export default function CalendarPage() {
           event={selectedEvent}
           onSave={fetchEvents}
         />
+        
       )}
+      <EventNotifications events={events} />
     </div>
   )
 }

@@ -19,6 +19,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ShareCalendar } from "./ShareCalendar";
+import { ExportCalendar } from "./ExportCalendar";
 
 interface CalendarProps extends Partial<CalendarOptions> {
   events: Array<{
@@ -68,10 +70,23 @@ const Calendar: React.FC<CalendarProps> = () => {
     setIsDialogOpen(true);
   };
 
+// For the event details section, use selectedEvent state
+const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
+
   const handleEventClick = (selected: EventClickArg) => {
-    if (window.confirm(`Are you sure you want to delete the event "${selected.event.title}"?`)) {
-      selected.event.remove();
-      const updatedEvents = currentEvents.filter(event => event.id !== selected.event.id);
+    const event = selected.event;
+
+    setEventInfo({
+      id: event.id,
+      title: event.title,
+      start: event.start!,
+      end: event.end!,
+      allDay: event.allDay
+    });
+
+    if (window.confirm(`Are you sure you want to delete the event "${event.title}"?`)) {
+      event.remove();
+      const updatedEvents = currentEvents.filter(event => event.id !== event.id);
       setCurrentEvents(updatedEvents);
       localStorage.setItem('calendarEvents', JSON.stringify(updatedEvents));
     }
@@ -181,18 +196,14 @@ const Calendar: React.FC<CalendarProps> = () => {
             headerToolbar={{
               left: "prev,next today",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay",
+              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek,listMonth'",
             }}
             views={{
-              dayGridMonth: {
-                titleFormat: { month: 'long', year: 'numeric' }
-              },
-              timeGridWeek: {
-                titleFormat: { month: 'long', year: 'numeric' }
-              },
-              timeGridDay: {
-                titleFormat: { month: 'long', day: 'numeric', year: 'numeric' }
-              }
+              dayGridMonth: { titleFormat: { month: 'long', year: 'numeric' } },
+              timeGridWeek: { titleFormat: { month: 'long', year: 'numeric' } },
+              timeGridDay: { titleFormat: { month: 'long', day: 'numeric', year: 'numeric' } },
+              listWeek: { buttonText: 'List View' },
+              listMonth: { buttonText: 'Monthly List' }
             }}
             initialView={window.innerWidth < 768 ? "timeGridDay" : "dayGridMonth"}
             select={handleDateClick}
@@ -208,7 +219,11 @@ const Calendar: React.FC<CalendarProps> = () => {
               allDay: event.allDay
             }))}
           />
+          <ExportCalendar events={currentEvents} />
         </div>
+        <div>
+    {eventInfo && <ShareCalendar event={eventInfo} />}
+  </div>
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
