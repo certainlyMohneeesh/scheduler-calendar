@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Calendar from '@/components/Calendar'
 import { useSession } from 'next-auth/react'
 import AddEventModal from '@/components/AddEventModal'
-// import { EventNotifications } from '@/components/EventNotifications'
+import { EventNotifications } from '@/components/EventNotifications'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
 // interface CalendarProps {
@@ -83,7 +83,7 @@ export default function CalendarPage() {
         />
         
       )}
-      {/* <EventNotifications events={events} /> */}
+      <EventNotifications events={events} />
       {/* </ErrorBoundary> */}
     </div>
   )
