@@ -256,12 +256,12 @@ const handleEventDrop = (info: EventDropArg) => {
               allDay: event.allDay
             }))}
           />
-          <ExportCalendar events={currentEvents} />
         </div>
+      </div>
+          <ExportCalendar events={currentEvents} />
         <div>
     {eventInfo && <ShareCalendar event={eventInfo} />}
   </div>
-      </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
