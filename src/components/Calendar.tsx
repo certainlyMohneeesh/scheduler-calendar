@@ -21,8 +21,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ShareCalendar } from "./ShareCalendar";
-import { ExportCalendar } from "./ExportCalendar";
+// import { ShareCalendar } from "./ShareCalendar";
+// import { ExportCalendar } from "./ExportCalendar";
 
 interface CalendarProps extends Partial<CalendarOptions> {
   events: Array<{
@@ -103,18 +103,18 @@ const Calendar: React.FC<CalendarProps> = () => {
     setIsDialogOpen(true);
   };
 
-  const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
+  // const [eventInfo, setEventInfo] = useState<CalendarEvent | null>(null);
 
   const handleEventClick = (selected: EventClickArg) => {
     const event = selected.event;
 
-    setEventInfo({
-      id: event.id,
-      title: event.title,
-      start: event.start!,
-      end: event.end!,
-      allDay: event.allDay
-    });
+    // setEventInfo({
+    //   id: event.id,
+    //   title: event.title,
+    //   start: event.start!,
+    //   end: event.end!,
+    //   allDay: event.allDay
+    // });
 
     if (window.confirm(`Are you sure you want to delete the event "${selected.event.title}"?`)) {
       selected.event.remove();
@@ -282,10 +282,10 @@ const handleEventDrop = (info: EventDropArg) => {
           </form>
         </DialogContent>
       </Dialog>
-          <ExportCalendar events={currentEvents} />
+          {/* <ExportCalendar events={currentEvents} />
         <div>
     {eventInfo && <ShareCalendar event={eventInfo} />}
-  </div>
+  </div> */}
     </div>
     // </ErrorBoundary>
   );
