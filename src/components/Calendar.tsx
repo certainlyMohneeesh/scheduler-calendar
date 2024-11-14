@@ -258,10 +258,6 @@ const handleEventDrop = (info: EventDropArg) => {
           />
         </div>
       </div>
-          <ExportCalendar events={currentEvents} />
-        <div>
-    {eventInfo && <ShareCalendar event={eventInfo} />}
-  </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
@@ -286,6 +282,10 @@ const handleEventDrop = (info: EventDropArg) => {
           </form>
         </DialogContent>
       </Dialog>
+          <ExportCalendar events={currentEvents} />
+        <div>
+    {eventInfo && <ShareCalendar event={eventInfo} />}
+  </div>
     </div>
     // </ErrorBoundary>
   );
