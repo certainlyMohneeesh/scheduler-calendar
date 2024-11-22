@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/toaster"
 const ubuntu = Ubuntu({ weight: "400", subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Yolda Scheduler',
+  title: 'MySchedule',
   description: 'Manage your schedule efficiently',
   icons: '/favicon.ico',
 }

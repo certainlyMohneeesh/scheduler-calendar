@@ -12,7 +12,7 @@ export default function Footer({ showOnPaths = ['/about', '/contact', '/'] }: { 
     <footer className="relative bg-[#0A122A] py-12 px-8 text-white overflow-hidden">
       {/* Background Text */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] font-bold text-white/5 whitespace-nowrap z-0">
-        Yolda
+        MySchedule
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -48,7 +48,7 @@ export default function Footer({ showOnPaths = ['/about', '/contact', '/'] }: { 
 
         {/* Newsletter Column */}
         <div>
-          <h4 className="text-xl font-semibold mb-4">Get Yolda updates</h4>
+          <h4 className="text-xl font-semibold mb-4">Get MySchedule updates</h4>
           <form className="flex gap-2">
             <input
               type="email"

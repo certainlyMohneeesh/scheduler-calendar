@@ -12,7 +12,7 @@ export default function Home() {
     <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white">
       <div className="text-center space-y-8 p-6">
         <h1 className="text-5xl font-bold text-blue-900">
-          Welcome to Yolda Scheduler
+          Welcome to MySchedule
         </h1>
         
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
