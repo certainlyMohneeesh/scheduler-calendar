@@ -14,7 +14,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold text-blue-600">Yolda Scheduler</span>
+              <span className="text-xl font-bold text-blue-600">MySchedule</span>
             </Link>
           </div>
 
