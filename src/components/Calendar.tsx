@@ -84,6 +84,20 @@ const Calendar: React.FC<CalendarProps> = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newEventTitle, setNewEventTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
+  const interactionSettings = {
+    editable: true,
+    droppable: true,
+    selectable: true,
+    selectMirror: true,
+    eventStartEditable: true,
+    eventDurationEditable: true,
+    eventDragMinDistance: 5,
+    longPressDelay: 50,
+    selectLongPressDelay: 50,
+    eventLongPressDelay: 50,
+    dragRevertDuration: 500,
+    handleWindowResize: true,
+  }
 
   useEffect(() => {
     setMounted(true);
@@ -222,6 +236,7 @@ const handleEventDrop = (info: EventDropArg) => {
 
         <div className="w-full lg:w-9/12">
           <DynamicFullCalendar
+            {...interactionSettings}
             height={"auto"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             editable={true}
